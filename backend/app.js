@@ -3,7 +3,7 @@ const cors = require("cors");
 
 
 const authRoutes = require("./src/routes/authRoutes");
-// const vehicleRoutes = require("./src/routes/vehicleRoutes");
+const vehicleRoutes = require("./src/routes/vehicleRoutes");
 // const inventoryRoutes = require("./src/routes/inventoryRoutes");
 
 const app = express();
@@ -14,7 +14,7 @@ app.use(express.json());
 
 
 app.use("/api/auth", authRoutes);
-// app.use("/api/vehicles", vehicleRoutes);
+app.use("/api/vehicles", vehicleRoutes);
 // app.use("/api/vehicles", inventoryRoutes);
 
 // Health check route
