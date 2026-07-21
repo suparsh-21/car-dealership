@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 
 
-// const authRoutes = require("./src/routes/authRoutes");
+const authRoutes = require("./src/routes/authRoutes");
 // const vehicleRoutes = require("./src/routes/vehicleRoutes");
 // const inventoryRoutes = require("./src/routes/inventoryRoutes");
 
@@ -13,7 +13,7 @@ app.use(cors());
 app.use(express.json());
 
 
-// app.use("/api/auth", authRoutes);
+app.use("/api/auth", authRoutes);
 // app.use("/api/vehicles", vehicleRoutes);
 // app.use("/api/vehicles", inventoryRoutes);
 
