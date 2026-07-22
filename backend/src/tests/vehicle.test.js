@@ -60,7 +60,24 @@ afterAll(async () => {
 
 describe('POST /api/vehicles', () => {
 
-    it('should add a new vehicle when logged in', async () => {
+    it('should add a new vehicle when admin', async () => {
+        const res = await request(app)
+            .post('/api/vehicles')
+            .set('Authorization', `Bearer ${adminToken}`)
+            .send({
+                make: 'Toyota',
+                model: 'Camry',
+                category: 'sedan',
+                price: 25000,
+                quantity: 5,
+                year: 2023
+            })
+
+        expect(res.statusCode).toBe(201)
+        expect(res.body.vehicle.make).toBe('Toyota')
+    })
+
+    it('should return 403 when customer attempts to add vehicle', async () => {
         const res = await request(app)
             .post('/api/vehicles')
             .set('Authorization', `Bearer ${userToken}`)
@@ -73,8 +90,8 @@ describe('POST /api/vehicles', () => {
                 year: 2023
             })
 
-        expect(res.statusCode).toBe(201)
-        expect(res.body.vehicle.make).toBe('Toyota')
+        expect(res.statusCode).toBe(403)
+        expect(res.body.message).toBe('Access denied, admin only')
     })
 
     it('should not add vehicle without token', async () => {
@@ -95,7 +112,7 @@ describe('POST /api/vehicles', () => {
     it('should not add vehicle with missing fields', async () => {
         const res = await request(app)
             .post('/api/vehicles')
-            .set('Authorization', `Bearer ${userToken}`)
+            .set('Authorization', `Bearer ${adminToken}`)
             .send({
                 make: 'Toyota'
             })
@@ -189,7 +206,26 @@ describe('GET /api/vehicles/search', () => {
 
 describe('PUT /api/vehicles/:id', () => {
 
-    it('should update a vehicle when logged in', async () => {
+    it('should update a vehicle when admin', async () => {
+        const vehicle = await Vehicle.create({
+            make: 'Toyota',
+            model: 'Camry',
+            category: 'sedan',
+            price: 25000,
+            quantity: 5,
+            year: 2023
+        })
+
+        const res = await request(app)
+            .put(`/api/vehicles/${vehicle._id}`)
+            .set('Authorization', `Bearer ${adminToken}`)
+            .send({price: 27000})
+
+        expect(res.statusCode).toBe(200)
+        expect(res.body.vehicle.price).toBe(27000)
+    })
+
+    it('should return 403 when customer attempts to update vehicle', async () => {
         const vehicle = await Vehicle.create({
             make: 'Toyota',
             model: 'Camry',
@@ -204,8 +240,7 @@ describe('PUT /api/vehicles/:id', () => {
             .set('Authorization', `Bearer ${userToken}`)
             .send({price: 27000})
 
-        expect(res.statusCode).toBe(200)
-        expect(res.body.vehicle.price).toBe(27000)
+        expect(res.statusCode).toBe(403)
     })
 
     it('should return 404 for non existing vehicle', async () => {
@@ -213,7 +248,7 @@ describe('PUT /api/vehicles/:id', () => {
 
         const res = await request(app)
             .put(`/api/vehicles/${fakeId}`)
-            .set('Authorization', `Bearer ${userToken}`)
+            .set('Authorization', `Bearer ${adminToken}`)
             .send({price: 27000})
 
         expect(res.statusCode).toBe(404)

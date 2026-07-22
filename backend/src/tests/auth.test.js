@@ -24,7 +24,7 @@ afterAll(async () => {
 
 describe('POST /api/auth/register', () => {
 
-    it('should register a new user successfully', async () => {
+    it('should register a new user with customer role', async () => {
         const res = await request(app)
             .post('/api/auth/register')
             .send({
@@ -36,6 +36,21 @@ describe('POST /api/auth/register', () => {
         expect(res.statusCode).toBe(201)
         expect(res.body).toHaveProperty('token')
         expect(res.body.user.email).toBe('suparsh@test.com')
+        expect(res.body.user.role).toBe('customer')
+    })
+
+    it('should reject admin registration attempts from frontend', async () => {
+        const res = await request(app)
+            .post('/api/auth/register')
+            .send({
+                name: 'Hacker Admin',
+                email: 'hacker@test.com',
+                password: 'password123',
+                role: 'admin'
+            })
+
+        expect(res.statusCode).toBe(403)
+        expect(res.body.message).toBe('Admin registration is not allowed')
     })
 
     it('should not register user with duplicate email', async () => {

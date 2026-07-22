@@ -1,6 +1,7 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
+import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
@@ -11,6 +12,9 @@ function App() {
         <BrowserRouter>
             <AuthProvider>
                 <Routes>
+                    {/* home page */}
+                    <Route path="/" element={<Home />} />
+
                     {/* public routes */}
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
@@ -22,13 +26,10 @@ function App() {
                         </ProtectedRoute>
                     } />
                     <Route path="/admin" element={
-                        <ProtectedRoute>
+                        <ProtectedRoute adminOnly>
                             <AdminPanel />
                         </ProtectedRoute>
                     } />
-
-                    {/* default redirect */}
-                    <Route path="/" element={<Navigate to="/dashboard" />} />
                 </Routes>
             </AuthProvider>
         </BrowserRouter>

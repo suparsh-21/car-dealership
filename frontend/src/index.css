@@ -9,19 +9,126 @@
 }
 
 body {
-  background-color: #0f0f0f;
-  color: #ffffff;
-  font-family: 'Segoe UI', sans-serif;
+  background-color: #0b0c10;
+  color: #f1f5f9;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  overflow-x: hidden;
 }
 
-/* custom scrollbar */
+.font-serif-luxury {
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+.font-sans-clean {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #1a1a1a;
+  background: #12141c;
 }
 ::-webkit-scrollbar-thumb {
-  background: #6d28d9;
+  background: #2d3142;
   border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #d90429;
+}
+
+/* Keyframes & Animations */
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.05); }
+}
+
+.animate-car-float {
+  animation: floatSlow 5s ease-in-out infinite;
+}
+
+.animate-fade-up {
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-marquee {
+  display: flex;
+  width: 200%;
+  animation: marquee 25s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+.bg-porcelain {
+  background-color: #0b0c10;
+}
+
+.bg-crimson {
+  background-color: #d90429;
+}
+
+.text-crimson {
+  color: #d90429;
+}
+
+.border-crimson {
+  border-color: #d90429;
+}
+
+/* AutoVault Special Brand Animations */
+@keyframes textShimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes vaultPulse {
+  0%, 100% { box-shadow: 0 0 15px rgba(217, 4, 41, 0.3); }
+  50% { box-shadow: 0 0 30px rgba(217, 4, 41, 0.7); }
+}
+
+.animate-autovault-shimmer {
+  background: linear-gradient(90deg, #ffffff 0%, #d90429 50%, #ffffff 100%);
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: textShimmer 4s ease infinite;
+}
+
+.animate-autovault-red {
+  background: linear-gradient(90deg, #d90429 0%, #ff4d6d 50%, #d90429 100%);
+  background-size: 200% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: textShimmer 3s ease infinite;
+}
+
+.animate-vault-glow {
+  animation: vaultPulse 3s ease-in-out infinite;
 }

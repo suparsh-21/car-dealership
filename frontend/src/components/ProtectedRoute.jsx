@@ -1,12 +1,15 @@
 import { Navigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
-const ProtectedRoute = ({ children }) => {
+const ProtectedRoute = ({ children, adminOnly = false }) => {
     const { user } = useAuth()
 
-    // if not logged in, redirect to login page
-    if(!user){
+    if (!user) {
         return <Navigate to="/login" />
+    }
+
+    if (adminOnly && user.role !== 'admin') {
+        return <Navigate to="/dashboard" />
     }
 
     return children
