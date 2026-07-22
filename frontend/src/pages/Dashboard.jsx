@@ -23,8 +23,8 @@ const Dashboard = () => {
         fetchVehicles()
     }, [filters])
 
-    const fetchVehicles = async () => {
-        setLoading(true)
+    const fetchVehicles = async (silent = false) => {
+        if (!silent) setLoading(true)
         setError('')
         try {
             const hasFilters = Object.values(filters).some(val => val !== '')
@@ -44,8 +44,15 @@ const Dashboard = () => {
         } catch (err) {
             setError('Failed to load vehicles')
         } finally {
-            setLoading(false)
+            if (!silent) setLoading(false)
         }
+    }
+
+    const handleVehicleUpdate = (updatedVehicle) => {
+        if (updatedVehicle && updatedVehicle._id) {
+            setVehicles(prev => prev.map(v => v._id === updatedVehicle._id ? updatedVehicle : v))
+        }
+        fetchVehicles(true)
     }
 
     const handleFormSuccess = () => {
@@ -141,7 +148,7 @@ const Dashboard = () => {
                                     <VehicleCard 
                                         key={vehicle._id} 
                                         vehicle={vehicle} 
-                                        onUpdate={fetchVehicles} 
+                                        onUpdate={handleVehicleUpdate} 
                                         onEdit={handleEditVehicle}
                                     />
                                 ))}

@@ -219,11 +219,6 @@ const seedVehicles = async () => {
             if (!existing) {
                 await Vehicle.create(item)
                 console.log(`🏎️ Seeded default vehicle: ${item.make} ${item.model} (Qty: ${item.quantity})`)
-            } else {
-                existing.quantity = Math.max(10, existing.quantity || 10)
-                existing.imageUrl = item.imageUrl
-                await existing.save()
-                console.log(`🏎️ Updated vehicle stock & image: ${item.make} ${item.model} (Qty: ${existing.quantity})`)
             }
         }
     } catch (error) {

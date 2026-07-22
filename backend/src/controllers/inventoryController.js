@@ -2,18 +2,19 @@ const Vehicle = require('../models/Vehicle')
 
 const purchaseVehicle = async (req, res) => {
     try {
-        const vehicle = await Vehicle.findById(req.params.id)
+        const vehicle = await Vehicle.findOneAndUpdate(
+            { _id: req.params.id, quantity: { $gt: 0 } },
+            { $inc: { quantity: -1 } },
+            { new: true }
+        )
 
-        if(!vehicle){
-            return res.status(404).json({message: 'Vehicle not found'})
+        if (!vehicle) {
+            const existingVehicle = await Vehicle.findById(req.params.id)
+            if (!existingVehicle) {
+                return res.status(404).json({ message: 'Vehicle not found' })
+            }
+            return res.status(400).json({ message: 'Vehicle out of stock' })
         }
-
-        if(vehicle.quantity === 0){
-            return res.status(400).json({message: 'Vehicle out of stock'})
-        }
-
-        vehicle.quantity = vehicle.quantity - 1
-        await vehicle.save()
 
         res.status(200).json({
             message: 'Vehicle purchased successfully',

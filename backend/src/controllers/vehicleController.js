@@ -1,5 +1,4 @@
 const Vehicle = require('../models/Vehicle')
-const seedVehicles = require('../config/seedVehicles')
 
 const addVehicle = async (req, res) => {
     const {make, model, category, price, quantity, year, description, imageUrl} = req.body
@@ -22,7 +21,6 @@ const addVehicle = async (req, res) => {
 
 const getAllVehicles = async (req, res) => {
     try {
-        await seedVehicles()
         const vehicles = await Vehicle.find()
         res.status(200).json({vehicles})
     } catch(error) {
@@ -45,7 +43,6 @@ const searchVehicles = async (req, res) => {
     }
 
     try {
-        await seedVehicles()
         const vehicles = await Vehicle.find(query)
         res.status(200).json({vehicles})
     } catch(error) {

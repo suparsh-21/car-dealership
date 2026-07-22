@@ -13,11 +13,16 @@ const VehicleCard = ({ vehicle, onUpdate, onEdit }) => {
         setLoading(true)
         setMessage('')
         try {
-            await API.post(`/vehicles/${vehicle._id}/purchase`)
+            const res = await API.post(`/vehicles/${vehicle._id}/purchase`)
             setMessage('Purchased successfully!')
-            onUpdate()
+            const updatedVehicle = res.data?.vehicle || { ...vehicle, quantity: Math.max(0, vehicle.quantity - 1) }
+            onUpdate(updatedVehicle)
         } catch (err) {
-            setMessage(err.response?.data?.message || 'Purchase failed')
+            const errMsg = err.response?.data?.message || 'Purchase failed'
+            setMessage(errMsg)
+            if (err.response?.status === 401) {
+                setMessage('Session expired. Please log in again.')
+            }
         } finally {
             setLoading(false)
         }
@@ -28,9 +33,10 @@ const VehicleCard = ({ vehicle, onUpdate, onEdit }) => {
         setMessage('')
         try {
             const newQuantity = Math.max(0, (vehicle.quantity || 0) + delta)
-            await API.put(`/vehicles/${vehicle._id}`, { quantity: newQuantity })
+            const res = await API.put(`/vehicles/${vehicle._id}`, { quantity: newQuantity })
             setMessage(`Quantity updated to ${newQuantity}`)
-            onUpdate()
+            const updatedVehicle = res.data?.vehicle || { ...vehicle, quantity: newQuantity }
+            onUpdate(updatedVehicle)
         } catch (err) {
             setMessage(err.response?.data?.message || 'Failed to update quantity')
         } finally {
@@ -112,7 +118,7 @@ const VehicleCard = ({ vehicle, onUpdate, onEdit }) => {
                                 </button>
                             )}
                             <span className={`text-sm font-black px-3.5 py-1.5 rounded-xl uppercase tracking-wider border-2 shadow-lg ${vehicle.quantity > 0 ? 'bg-emerald-950/90 text-emerald-300 border-emerald-500 shadow-emerald-950/50' : 'bg-red-950/90 text-red-300 border-red-500 shadow-red-950/50'}`}>
-                                {vehicle.quantity > 0 ? `${vehicle.quantity} Units` : 'Sold Out'}
+                                {vehicle.quantity > 0 ? `${vehicle.quantity} Units` : 'Out of Stock'}
                             </span>
                             {isAdmin && (
                                 <button
@@ -148,7 +154,7 @@ const VehicleCard = ({ vehicle, onUpdate, onEdit }) => {
                         <button
                             onClick={handleDelete}
                             disabled={loading}
-                            className="py-3 px-4 bg-red-950/60 text-[#d90429] border border-red-800/40 text-xs font-bold uppercase tracking-wider rounded-full hover:bg-[#d90429] hover:text-white transition disabled:opacity-50"
+                            className="py-3 px-4 bg-red-950/60 text-[#d90429] border border-red-800/40 text-xs font-bold uppercase tracking-wider rounded-full hover:bg-[#d90429] hover:text-[#ffffff] transition disabled:opacity-50"
                         >
                             🗑️ Delete
                         </button>
@@ -156,10 +162,10 @@ const VehicleCard = ({ vehicle, onUpdate, onEdit }) => {
                 ) : (
                     <button
                         onClick={handlePurchase}
-                        disabled={vehicle.quantity === 0 || loading}
+                        disabled={vehicle.quantity <= 0 || loading}
                         className="w-full py-3.5 bg-[#d90429] text-white text-xs font-bold uppercase tracking-widest rounded-full hover:bg-[#b8001f] transition shadow-md hover:shadow-red-500/20 disabled:bg-white/5 disabled:text-gray-600 disabled:cursor-not-allowed active:scale-95"
                     >
-                        {loading ? 'Processing...' : vehicle.quantity === 0 ? 'Sold Out' : 'Purchase Vehicle →'}
+                        {loading ? 'Processing...' : vehicle.quantity <= 0 ? 'Out of Stock' : 'Purchase Vehicle →'}
                     </button>
                 )}
             </div>

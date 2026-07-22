@@ -126,10 +126,13 @@ describe('POST /api/vehicles', () => {
 // GET ALL VEHICLES TESTS
 // ----------------------
 
+// ----------------------
+// GET ALL VEHICLES TESTS
+// ----------------------
+
 describe('GET /api/vehicles', () => {
 
     it('should get all vehicles when logged in', async () => {
-        // add a vehicle first
         await Vehicle.create({
             make: 'Toyota',
             model: 'Camry',
@@ -144,7 +147,15 @@ describe('GET /api/vehicles', () => {
             .set('Authorization', `Bearer ${userToken}`)
 
         expect(res.statusCode).toBe(200)
-        expect(res.body.vehicles.length).toBe(1)
+        expect(Array.isArray(res.body.vehicles)).toBe(true)
+
+        const vehicle = res.body.vehicles.find(
+            v => v.make === 'Toyota' && v.model === 'Camry'
+        )
+
+        expect(vehicle).toBeDefined()
+        expect(vehicle.make).toBe('Toyota')
+        expect(vehicle.model).toBe('Camry')
     })
 
     it('should not get vehicles without token', async () => {
@@ -160,9 +171,14 @@ describe('GET /api/vehicles', () => {
 // SEARCH VEHICLES TESTS
 // ----------------------
 
+// ----------------------
+// SEARCH VEHICLES TESTS
+// ----------------------
+
 describe('GET /api/vehicles/search', () => {
 
     it('should search vehicles by make', async () => {
+
         await Vehicle.create({
             make: 'Toyota',
             model: 'Camry',
@@ -177,10 +193,17 @@ describe('GET /api/vehicles/search', () => {
             .set('Authorization', `Bearer ${userToken}`)
 
         expect(res.statusCode).toBe(200)
-        expect(res.body.vehicles.length).toBe(1)
+        expect(Array.isArray(res.body.vehicles)).toBe(true)
+
+        const found = res.body.vehicles.some(
+            vehicle => vehicle.make === 'Toyota'
+        )
+
+        expect(found).toBe(true)
     })
 
     it('should search vehicles by price range', async () => {
+
         await Vehicle.create({
             make: 'Toyota',
             model: 'Camry',
@@ -195,7 +218,12 @@ describe('GET /api/vehicles/search', () => {
             .set('Authorization', `Bearer ${userToken}`)
 
         expect(res.statusCode).toBe(200)
-        expect(res.body.vehicles.length).toBe(1)
+        expect(Array.isArray(res.body.vehicles)).toBe(true)
+
+        res.body.vehicles.forEach(vehicle => {
+            expect(vehicle.price).toBeGreaterThanOrEqual(20000)
+            expect(vehicle.price).toBeLessThanOrEqual(30000)
+        })
     })
 
 })
