@@ -52,17 +52,25 @@ const VehicleCard = ({ vehicle, onUpdate, onEdit }) => {
     }
 
     return (
-        <div className="bg-[#141620] border border-white/10 p-6 rounded-3xl hover:border-[#d90429] hover:shadow-2xl hover:shadow-red-950/30 transition-all duration-300 flex flex-col justify-between group font-sans-clean">
+        <div className="bg-[#141620] border border-white/10 p-6 rounded-3xl hover-glow-card animate-card-reveal flex flex-col justify-between group font-sans-clean relative overflow-hidden">
+            {/* Card Glow Ambient Overlay */}
+            <div className="absolute -top-24 -right-24 w-48 h-48 bg-red-600/10 rounded-full blur-3xl pointer-events-none group-hover:bg-red-600/25 transition-all"></div>
 
             <div>
-                {/* Image Placeholder / Banner */}
-                <div className="relative w-full h-48 bg-[#0b0c10] rounded-2xl overflow-hidden mb-6 flex items-center justify-center border border-white/5">
+                {/* Custom Vehicle Image with Auto-Alignment & Fallback */}
+                <div className="relative w-full h-52 bg-[#0b0c10] rounded-2xl overflow-hidden mb-6 flex items-center justify-center border border-white/10 group-hover:border-white/25 transition-all shadow-inner">
                     <img 
-                        src="https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=600&q=80"
+                        src={vehicle.imageUrl || 'https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?auto=format&fit=crop&w=800&q=80'}
                         alt={`${vehicle.make} ${vehicle.model}`}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        referrerPolicy="no-referrer"
+                        className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                        onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = 'https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&w=800&q=80';
+                        }}
                     />
-                    <div className="absolute top-3 right-3 px-3 py-1 bg-[#0b0c10]/90 backdrop-blur-md rounded-full border border-white/10 text-[10px] font-bold uppercase tracking-wider text-[#d90429]">
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#141620] via-transparent to-transparent opacity-60"></div>
+                    <div className="absolute top-3 right-3 px-3 py-1 bg-[#0b0c10]/90 backdrop-blur-md rounded-full border border-white/10 text-[10px] font-bold uppercase tracking-wider text-[#d90429] shadow-md">
                         {vehicle.category || 'IMPORT'}
                     </div>
                 </div>
@@ -91,27 +99,27 @@ const VehicleCard = ({ vehicle, onUpdate, onEdit }) => {
                         </p>
                     </div>
                     <div className="text-right">
-                        <p className="text-gray-400 text-[10px] uppercase tracking-wider font-semibold mb-0.5">Stock</p>
-                        <div className="flex items-center gap-1.5 justify-end">
+                        <p className="text-white text-[11px] uppercase tracking-widest font-black mb-1">Stock</p>
+                        <div className="flex items-center gap-2 justify-end">
                             {isAdmin && (
                                 <button
                                     onClick={() => handleModifyQuantity(-1)}
                                     disabled={loading || vehicle.quantity === 0}
                                     title="Decrease stock quantity by 1"
-                                    className="w-6 h-6 rounded-full bg-white/10 text-white font-bold text-xs flex items-center justify-center hover:bg-red-600 transition disabled:opacity-30"
+                                    className="w-7 h-7 rounded-lg bg-white/15 text-white font-black text-sm flex items-center justify-center hover:bg-[#d90429] transition disabled:opacity-30 active:scale-95 shadow-md"
                                 >
                                     -
                                 </button>
                             )}
-                            <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${vehicle.quantity > 0 ? 'bg-emerald-950/60 text-emerald-400 border border-emerald-800/40' : 'bg-red-950/60 text-red-400 border border-red-800/40'}`}>
-                                {vehicle.quantity > 0 ? `${vehicle.quantity} units` : 'Sold out'}
+                            <span className={`text-sm font-black px-3.5 py-1.5 rounded-xl uppercase tracking-wider border-2 shadow-lg ${vehicle.quantity > 0 ? 'bg-emerald-950/90 text-emerald-300 border-emerald-500 shadow-emerald-950/50' : 'bg-red-950/90 text-red-300 border-red-500 shadow-red-950/50'}`}>
+                                {vehicle.quantity > 0 ? `${vehicle.quantity} Units` : 'Sold Out'}
                             </span>
                             {isAdmin && (
                                 <button
                                     onClick={() => handleModifyQuantity(1)}
                                     disabled={loading}
                                     title="Increase stock quantity by 1"
-                                    className="w-6 h-6 rounded-full bg-white/10 text-white font-bold text-xs flex items-center justify-center hover:bg-emerald-600 transition"
+                                    className="w-7 h-7 rounded-lg bg-white/15 text-white font-black text-sm flex items-center justify-center hover:bg-emerald-600 transition active:scale-95 shadow-md"
                                 >
                                     +
                                 </button>

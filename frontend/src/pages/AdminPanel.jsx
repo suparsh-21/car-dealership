@@ -140,9 +140,9 @@ const AdminPanel = () => {
                                                 </td>
                                                 <td className="px-6 py-5 font-semibold text-gray-300">{v.year}</td>
                                                 <td className="px-6 py-5 font-bold font-serif-luxury text-base text-[#d90429]">₹{v.price?.toLocaleString()}</td>
-                                                <td className="px-6 py-5 font-semibold">
-                                                    <span className={v.quantity > 0 ? 'text-emerald-400 font-bold' : 'text-red-400 font-bold'}>
-                                                        {v.quantity} units
+                                                <td className="px-6 py-5">
+                                                    <span className={`px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-wider border-2 shadow-md ${v.quantity > 0 ? 'bg-emerald-950 text-emerald-300 border-emerald-500' : 'bg-red-950 text-red-300 border-red-500'}`}>
+                                                        {v.quantity > 0 ? `${v.quantity} Units` : 'Sold Out'}
                                                     </span>
                                                 </td>
                                                 <td className="px-8 py-5 text-right space-x-3">

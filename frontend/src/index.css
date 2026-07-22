@@ -107,28 +107,96 @@ body {
 }
 
 @keyframes vaultPulse {
-  0%, 100% { box-shadow: 0 0 15px rgba(217, 4, 41, 0.3); }
-  50% { box-shadow: 0 0 30px rgba(217, 4, 41, 0.7); }
+  0%, 100% { 
+    box-shadow: 0 0 15px rgba(217, 4, 41, 0.4), 0 0 30px rgba(217, 4, 41, 0.2); 
+    transform: scale(1);
+  }
+  50% { 
+    box-shadow: 0 0 25px rgba(217, 4, 41, 0.8), 0 0 45px rgba(217, 4, 41, 0.5); 
+    transform: scale(1.04);
+  }
+}
+
+@keyframes rollAcross {
+  0% {
+    transform: translateX(-15vw);
+  }
+  100% {
+    transform: translateX(115vw);
+  }
+}
+
+@keyframes spinWheel {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(1440deg);
+  }
 }
 
 .animate-autovault-shimmer {
-  background: linear-gradient(90deg, #ffffff 0%, #d90429 50%, #ffffff 100%);
-  background-size: 200% auto;
-  color: transparent;
-  -webkit-background-clip: text;
-  background-clip: text;
-  animation: textShimmer 4s ease infinite;
-}
-
-.animate-autovault-red {
-  background: linear-gradient(90deg, #d90429 0%, #ff4d6d 50%, #d90429 100%);
-  background-size: 200% auto;
+  background: linear-gradient(90deg, #ffffff 0%, #d90429 25%, #ff4d6d 50%, #d90429 75%, #ffffff 100%);
+  background-size: 300% auto;
   color: transparent;
   -webkit-background-clip: text;
   background-clip: text;
   animation: textShimmer 3s ease infinite;
 }
 
+.animate-autovault-red {
+  background: linear-gradient(90deg, #d90429 0%, #ff4d6d 50%, #ffffff 75%, #d90429 100%);
+  background-size: 300% auto;
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  animation: textShimmer 2.5s linear infinite;
+}
+
 .animate-vault-glow {
-  animation: vaultPulse 3s ease-in-out infinite;
+  animation: vaultPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes cardFloatIn {
+  0% {
+    opacity: 0;
+    transform: translateY(40px) scale(0.96) rotateX(8deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotateX(0deg);
+  }
+}
+
+@keyframes glowBorderPulse {
+  0%, 100% {
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  }
+  50% {
+    border-color: rgba(217, 4, 41, 0.6);
+    box-shadow: 0 15px 45px rgba(217, 4, 41, 0.3);
+  }
+}
+
+.animate-roll-track {
+  animation: rollAcross 4.5s linear infinite;
+}
+
+.animate-spin-fast {
+  animation: spinWheel 0.9s linear infinite;
+}
+
+.animate-card-reveal {
+  animation: cardFloatIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.hover-glow-card {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hover-glow-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  border-color: rgba(217, 4, 41, 0.8);
+  box-shadow: 0 25px 60px rgba(217, 4, 41, 0.25), 0 0 20px rgba(217, 4, 41, 0.15);
 }

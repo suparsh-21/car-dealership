@@ -31,6 +31,11 @@ const vehicleSchema = new mongoose.Schema({
         type: String,
         trim: true
     },
+    imageUrl: {
+        type: String,
+        trim: true,
+        default: ''
+    },
     year: {
         type: Number,
         required: true

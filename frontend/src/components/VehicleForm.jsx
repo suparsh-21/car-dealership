@@ -9,6 +9,7 @@ const VehicleForm = ({ existingVehicle, onSuccess, onCancel }) => {
         price: existingVehicle?.price || '',
         quantity: existingVehicle?.quantity || '',
         year: existingVehicle?.year || '',
+        imageUrl: existingVehicle?.imageUrl || '',
         description: existingVehicle?.description || ''
     })
     const [loading, setLoading] = useState(false)
@@ -128,6 +129,41 @@ const VehicleForm = ({ existingVehicle, onSuccess, onCancel }) => {
                         required
                         className="w-full px-4 py-3 bg-[#0b0c10] border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[#d90429] focus:bg-[#141620] transition text-xs font-medium"
                     />
+                </div>
+
+                {/* Custom Image URL Field */}
+                <div className="md:col-span-2">
+                    <div className="flex items-center justify-between mb-2">
+                        <label className="block text-gray-400 text-xs font-bold uppercase tracking-wider">
+                            Custom Vehicle Image URL / Link
+                        </label>
+                        <span className="text-[10px] text-gray-500 font-semibold">Paste web link or leave blank for auto-style</span>
+                    </div>
+                    <input
+                        name="imageUrl"
+                        value={formData.imageUrl}
+                        onChange={handleChange}
+                        placeholder="https://images.unsplash.com/... or direct image link"
+                        className="w-full px-4 py-3 bg-[#0b0c10] border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-[#d90429] focus:bg-[#141620] transition text-xs font-medium mb-3"
+                    />
+
+                    {/* Image Live Preview */}
+                    {formData.imageUrl && (
+                        <div className="relative w-full h-36 bg-[#0b0c10] rounded-2xl overflow-hidden border border-white/10 flex items-center justify-center">
+                            <img
+                                src={formData.imageUrl}
+                                alt="Live Preview"
+                                className="w-full h-full object-cover"
+                                onError={(e) => {
+                                    e.target.onerror = null
+                                    e.target.src = 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=600&q=80'
+                                }}
+                            />
+                            <div className="absolute top-2 left-2 px-2.5 py-1 bg-black/80 backdrop-blur-md rounded-full text-[9px] font-bold text-emerald-400 border border-emerald-800/40 uppercase tracking-widest">
+                                ✓ Live Image Preview
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 <div className="md:col-span-2">

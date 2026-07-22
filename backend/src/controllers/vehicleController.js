@@ -1,7 +1,8 @@
 const Vehicle = require('../models/Vehicle')
+const seedVehicles = require('../config/seedVehicles')
 
 const addVehicle = async (req, res) => {
-    const {make, model, category, price, quantity, year, description} = req.body
+    const {make, model, category, price, quantity, year, description, imageUrl} = req.body
 
     if(!make || !model || !category || !price || !quantity || !year){
         return res.status(400).json({message: 'Please fill all required fields'})
@@ -9,7 +10,7 @@ const addVehicle = async (req, res) => {
 
     try {
         const vehicle = await Vehicle.create({
-            make, model, category, price, quantity, year, description
+            make, model, category, price, quantity, year, description, imageUrl
         })
 
         res.status(201).json({message: 'Vehicle added successfully', vehicle})
@@ -21,6 +22,7 @@ const addVehicle = async (req, res) => {
 
 const getAllVehicles = async (req, res) => {
     try {
+        await seedVehicles()
         const vehicles = await Vehicle.find()
         res.status(200).json({vehicles})
     } catch(error) {
@@ -43,6 +45,7 @@ const searchVehicles = async (req, res) => {
     }
 
     try {
+        await seedVehicles()
         const vehicles = await Vehicle.find(query)
         res.status(200).json({vehicles})
     } catch(error) {
